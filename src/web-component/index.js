@@ -7,6 +7,7 @@ class PdbeMolstar extends LitElement {
       moleculeId: { type: String, attribute: 'molecule-id' },
       assemblyId: { type: String, attribute: 'assembly-id' },
       customDataUrl: { type: String, attribute: 'custom-data-url' },
+      customDataAuthToken: { type: String, attribute: 'custom-data-token' },
       customDataFormat: { type: String, attribute: 'custom-data-format' },
       customDataBinary: { type: Boolean, attribute: 'custom-data-binary' },
       ligandLabelCompId: { type: String, attribute: 'ligand-label-comp-id' },
@@ -92,7 +93,7 @@ class PdbeMolstar extends LitElement {
     
     if(propName == 'customDataUrl' || propName == 'customDataFormat'){
       if(this.initParams.customData) return;
-      this.initParams.customData = {url: this.customDataUrl, format: this.customDataFormat};
+      this.initParams.customData = {url: this.customDataUrl, authToken: this.customDataAuthToken, format: this.customDataFormat};
     }else if(ligandParams.indexOf(propName) > -1){
       if(this.initParams.ligandView) return;
       this.initParams.ligandView = Object.assign({},{});
@@ -134,7 +135,7 @@ class PdbeMolstar extends LitElement {
 
   createParamModel(){
     
-    const specialProps = ['customDataUrl', 'customDataFormat', 'ligandLabelCompId', 'bgColorR', 'bgColorG', 'bgColorB',
+    const specialProps = ['customDataUrl', 'customDataAuthToken', 'customDataFormat', 'ligandLabelCompId', 'bgColorR', 'bgColorG', 'bgColorB',
     'ligandAuthAsymId', 'ligandAuthSeqId', 'ligandHydrogens', 'highlightColorR', 'highlightColorG', 'highlightColorB',
     'selectColorR', 'selectColorG', 'selectColorB', 'hidePolymer', 'hideWater', 'hideHet', 'hideCarbs', 'hideNonStandard', 'hideCoarse',
     'hideExpandIcon', 'hideSelectionIcon', 'hideAnimationIcon', 'hideControlToggleIcon', 'hideControlInfoIcon'];

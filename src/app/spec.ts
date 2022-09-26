@@ -65,7 +65,7 @@ export type InitParams = {
     lowPrecisionCoords?: boolean, landscape?: boolean, expanded?: boolean, hideControls?: boolean, hideCanvasControls?: ['expand', 'selection', 'animation', 'controlToggle', 'controlInfo'],
     subscribeEvents?: boolean, pdbeLink?: boolean, assemblyId?: string, selectInteraction?: boolean,
     ligandView?: LigandQueryParam, defaultPreset?: 'default' | "unitcell" | "all-models" | "supercell",
-    bgColor?: {r: number, g: number, b: number}, customData? : {url: string, format: string, binary: boolean}, loadCartoonsOnly? : boolean, alphafoldView?: boolean, selectBindings?: any, focusBindings?: any, lighting?: 'flat' | 'matte' | 'glossy' | 'metallic' | 'plastic' | undefined,
+    bgColor?: {r: number, g: number, b: number}, customData? : {url: string, authToken: string, format: string, binary: boolean}, loadCartoonsOnly? : boolean, alphafoldView?: boolean, selectBindings?: any, focusBindings?: any, lighting?: 'flat' | 'matte' | 'glossy' | 'metallic' | 'plastic' | undefined,
     selectColor?: {r: number, g: number, b: number}, highlightColor?: {r: number, g: number, b: number}, superpositionParams?: {matrixAccession?: string, segment?: number, cluster?: number[], superposeCompleteCluster?: boolean, ligandView?: boolean},
     hideStructure?: ['polymer', 'het', 'water', 'carbs', 'nonStandard', 'coarse'], visualStyle?: 'cartoon' | 'ball-and-stick', encoding: 'cif' | 'bcif'
     granularity?: Loci.Granularity, selection?: { data: QueryParam[], nonSelectedColor?: any, clearPrevious?: boolean }, mapSettings: any, [key: string]: any;

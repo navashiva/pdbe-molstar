@@ -224,7 +224,7 @@ class PDBeMolstarPlugin {
             // Load Molecule CIF or coordQuery and Parse
             let dataSource = this.getMoleculeSrcUrl();
             if(dataSource){
-                this.load({ url: dataSource.url, format: dataSource.format as BuiltInTrajectoryFormat, assemblyId: this.initParams.assemblyId, isBinary: dataSource.isBinary});
+                this.load({ url: dataSource.url, authToken: dataSource.authToken, format: dataSource.format as BuiltInTrajectoryFormat, assemblyId: this.initParams.assemblyId, isBinary: dataSource.isBinary});
             }
 
             // Binding to other PDB Component events
@@ -263,6 +263,7 @@ class PDBeMolstarPlugin {
             sep = '&';
         }
         let url = `${this.initParams.pdbeUrl}model-server/v1/${id}/${query}${sep}encoding=${this.initParams.encoding}${this.initParams.lowPrecisionCoords ? '&lowPrecisionCoords=1' : '' }`;
+        let authToken = '';
         let isBinary = this.initParams.encoding === 'bcif' ? true : false;
         let format = 'mmcif';
 
@@ -271,6 +272,7 @@ class PDBeMolstarPlugin {
                 throw new Error(`Provide all custom data parameters`);
             }
             url = this.initParams.customData.url;
+            authToken = this.initParams.customData.authToken;
             format = this.initParams.customData.format;
             if(format === 'cif' || format === 'bcif') format = 'mmcif';
             // Validate supported format
@@ -282,6 +284,7 @@ class PDBeMolstarPlugin {
 
         return {
             url: url,
+            authToken: authToken,
             format: format,
             isBinary: isBinary
         };
@@ -327,14 +330,22 @@ class PDBeMolstarPlugin {
         }
     }
 
-    async load({ url, format = 'mmcif', isBinary = false, assemblyId = '' }: LoadParams, fullLoad = true) {
+    async load({ url, authToken = '', format = 'mmcif', isBinary = false, assemblyId = '' }: LoadParams, fullLoad = true) {
         if(fullLoad) this.clear();
         const isHetView = this.initParams.ligandView ? true : false;
         let downloadOptions: any = void 0;
         let isBranchedView = false;
         if (this.initParams.ligandView && this.initParams.ligandView.label_comp_id_list) {
             isBranchedView = true;
-            downloadOptions = { body: JSON.stringify(this.initParams.ligandView!.label_comp_id_list), headers: [['Content-type', 'application/json']]};
+            if (authToken === '') {
+                downloadOptions = { body: JSON.stringify(this.initParams.ligandView!.label_comp_id_list), headers: [['Content-type', 'application/json']]};
+            } else {
+                downloadOptions = { body: JSON.stringify(this.initParams.ligandView!.label_comp_id_list), headers: [['Content-type', 'application/json'],['Authorization', 'Basic' + btoa(authToken+ ':' + '')]]};
+            }
+        } else {
+            if (!(authToken === '')) {
+                downloadOptions = { headers: [['Authorization', 'Basic' + btoa(authToken+ ':' + '')]] };
+            }
         }
         
         const data = await this.plugin.builders.data.download({ url: Asset.Url(url, downloadOptions), isBinary }, { state: { isGhost: true } });
@@ -617,7 +628,7 @@ class PDBeMolstarPlugin {
             // Load Molecule CIF or coordQuery and Parse
             let dataSource = this.getMoleculeSrcUrl();
             if(dataSource){
-                this.load({ url: dataSource.url, format: dataSource.format as BuiltInTrajectoryFormat, assemblyId: this.initParams.assemblyId, isBinary: dataSource.isBinary}, fullLoad);
+                this.load({ url: dataSource.url, authToken: dataSource.authToken, format: dataSource.format as BuiltInTrajectoryFormat, assemblyId: this.initParams.assemblyId, isBinary: dataSource.isBinary}, fullLoad);
             }
         },
         visibility: (data: {polymer?: boolean, het?: boolean, water?: boolean, carbs?: boolean, maps?: boolean, [key: string]: any}) => {

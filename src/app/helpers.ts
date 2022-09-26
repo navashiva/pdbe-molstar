@@ -14,7 +14,7 @@ import { SIFTSMapping } from 'Molstar/mol-model-props/sequence/sifts-mapping';
 import { StructureQuery } from 'Molstar/mol-model/structure/query/query';
 
 export type SupportedFormats = 'mmcif' | 'bcif' | 'cif' | 'pdb' | 'sdf'
-export type LoadParams = { url: string, format?: BuiltInTrajectoryFormat, assemblyId?: string, isHetView?: boolean, isBinary?: boolean }
+export type LoadParams = { url: string, authToken?: string, format?: BuiltInTrajectoryFormat, assemblyId?: string, isHetView?: boolean, isBinary?: boolean }
 
 export namespace PDBeVolumes {
 
